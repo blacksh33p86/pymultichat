@@ -1,6 +1,6 @@
 pyChatServ pre-alpha
 
-********************************ToDo**********************************
+********************************ToDo***********************************
 
 - [x] connect from Client
 - [x] Send Msgs to all Users via "/send" command
@@ -13,7 +13,7 @@ pyChatServ pre-alpha
 
 - [ ] HTML5 client
 
-***************************future ideas....***************************
+***************************future ideas********************************
 
 - [ ] multiple channels for clients
 - [ ] private chat system
