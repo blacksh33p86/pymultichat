@@ -4,7 +4,12 @@ Created on 21.10.2013
 @author: developer
 '''
 import threading
-import couchdb
+
+
+'''Databaseinterface'''
+from dbinterfaces.mysqldb import idb
+#from dbinterfaces.couchdb import idb NOT IMPLEMENTED YET
+
 
 class cmdHandler(threading.Thread):
     '''
@@ -20,7 +25,7 @@ class cmdHandler(threading.Thread):
         self.alive = threading.Event()
         self.alive.set()
         
-        self.couch = couchdb.Server()
+        
         
         
     def sendMsgToAll(self,u,cmd):
@@ -39,16 +44,17 @@ class cmdHandler(threading.Thread):
         for k in self.ul:
             if k.chash == chash:
                 remk = k
+                if not remk.th == None:
+                    remk.th.join()
        
                
-        if not remk.th == None:
-            remk.th.join()
         
-        # dblogout
+        
+        # dblogout /chanlogout
         self.ul.remove(remk)
         
-    def logout(self,u,cmd):
-        pass
+    def logout(self,chash,cmd):
+        self.remUser(chash, cmd)
     
     def getUsernameBycHash(self,chash):
         
@@ -58,6 +64,14 @@ class cmdHandler(threading.Thread):
                 return a.nickname
            
         return "<missing>"
+    
+    def getUserBycHash(self,chash):
+        for a in self.ul:
+            
+            if a.chash == chash:
+                return a
+           
+        return None
         
     def run(self): 
         while self.alive.isSet():
@@ -68,13 +82,31 @@ class cmdHandler(threading.Thread):
                 cmd = cmd[1]
                 cmd = cmd.split(" ")
                 
+                user = self.getUserBycHash(chash)
                 
-                if cmd[0]== "/send":
-                    self.sendMsgToAll(self.getUsernameBycHash(chash), cmd[1:])
-                elif cmd[0]== "/login":
-                    self.sendMsgToAll(chash, cmd[1:])
-                elif cmd[0]== "!exited":
-                    self.remUser(chash, cmd[1:])
+                if user.loggedin:
+                    
+                    if cmd[0]== "/send":
+                        self.sendMsgToAll(user.nickname, cmd[1:])
+                    elif cmd[0]== "!exited":
+                        self.remUser(chash, cmd[1:])
+                    elif cmd[0]== "/logout":
+                        self.logout(chash, cmd[1:])
+                        
+                    if user.privilege >=1: # registered
+                        pass
+                    if user.privilege >=2: # channeladmin
+                        pass
+                    if user.privilege >=3: # moderator
+                        pass
+                    if user.privilege >=4: # admin
+                        pass
+                        
+                else:
+                    if cmd[0]== "/login" and ((len(cmd) == 2 and cmd[1]=="guest" ) or len(cmd) == 3 ):
+                        self.login(user, cmd[1:])
+                    else:
+                        self.remUser(chash, cmd)
                 
                 self.rQ.task_done()
             except Exception as ex:
