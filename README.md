@@ -1,11 +1,11 @@
 pyChatServ pre-alpha
 
-ToDo:
+********************************ToDo**********************************
 
 - [x] connect from Client
 - [x] Send Msgs to all Users via "/send" command
 - [ ] Login and nicknaming, including guests
-- [ ] clean logout
+- [*] clean logout
 - [ ] multiple channels and database connection
 - [ ] privilege system (e.g. create channel, delete channel, kick/ban user)
 - [ ] temp channel
@@ -13,7 +13,7 @@ ToDo:
 
 - [ ] HTML5 client
 
-future ideas....
+***************************future ideas....***************************
 
 - [ ] multiple channels for clients
 - [ ] private chat system
@@ -25,3 +25,6 @@ future ideas....
 
 ---to be continued---
 
+***************************fixes and updates***************************
+
+- [2013-10-23] - clean logout on client connection shutdown

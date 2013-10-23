@@ -11,7 +11,8 @@ if __name__ == "__main__":
     rQueue = Queue.Queue()
     exitflag=True
     
-    cmdH = cmdHandler(rQueue,userlist).start()
+    cmdH = cmdHandler(rQueue,userlist)
+    cmdH.start()
     
     RECV_BUFFER = 4096 # Advisable to keep it as an exponent of 2
     PORT = 3232
@@ -25,6 +26,8 @@ if __name__ == "__main__":
     while exitflag:
         
         cSock, addr = server_socket.accept()
+        cSock.setblocking(1)
+        cSock.settimeout(1800)
         p = useritem(cSock,addr,rQueue)
         p.createListener()
         userlist.append(p)

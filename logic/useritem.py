@@ -29,7 +29,7 @@ class useritem(object):
         
         self.privilege = 0
         self.loggedin = False
-        self.th = None
+        self.th = ""
         
         
         
@@ -37,4 +37,6 @@ class useritem(object):
         self.socket.send(msg)
     
     def createListener(self):
-        self.th = clistener(self.chash,self.cmdQ,self.rQ,self.socket).start()
+        self.th = clistener(self.chash,self.cmdQ,self.rQ,self.socket)
+        self.th.start()
+        

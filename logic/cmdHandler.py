@@ -34,7 +34,19 @@ class cmdHandler(threading.Thread):
         user = cmd[1]
         pw = cmd[2]
         
-    
+    def remUser(self,chash,cmd):
+        remk = None
+        for k in self.ul:
+            if k.chash == chash:
+                remk = k
+       
+               
+        if not remk.th == None:
+            remk.th.join()
+        
+        # dblogout
+        self.ul.remove(remk)
+        
     def logout(self,u,cmd):
         pass
     
@@ -50,7 +62,7 @@ class cmdHandler(threading.Thread):
     def run(self): 
         while self.alive.isSet():
             try:
-                cmd = self.rQ.get(True,None)
+                cmd = self.rQ.get(True,0.1)
                 print(cmd)
                 chash = cmd[0]
                 cmd = cmd[1]
@@ -59,9 +71,13 @@ class cmdHandler(threading.Thread):
                 
                 if cmd[0]== "/send":
                     self.sendMsgToAll(self.getUsernameBycHash(chash), cmd[1:])
-                if cmd[0]== "/login":
+                elif cmd[0]== "/login":
                     self.sendMsgToAll(chash, cmd[1:])
+                elif cmd[0]== "!exited":
+                    self.remUser(chash, cmd[1:])
                 
                 self.rQ.task_done()
-            except:
+            except Exception as ex:
+                if len(ex.args)>0:
+                    print(ex.args)
                 continue
