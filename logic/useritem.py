@@ -1,6 +1,5 @@
 
 import Queue
-from logic.clistener import clistener
 import hashlib
 
 """
@@ -18,13 +17,13 @@ class useritem(object):
         self.socket = socket
         self.address = address
         self.rQ = rQ
-        self.cmdQ = Queue.Queue()
+        
         self.nickname = "<missing>"
         self.uid = None
         
         m = hashlib.md5()
         m.update(address[0]+":"+str(address[1]))
- 
+        
         self.chash = m.hexdigest()
         
         self.privilege = 0
@@ -36,7 +35,5 @@ class useritem(object):
     def sendMessage(self,msg):
         self.socket.send(msg)
     
-    def createListener(self):
-        self.th = clistener(self.chash,self.cmdQ,self.rQ,self.socket)
-        self.th.start()
+    
         

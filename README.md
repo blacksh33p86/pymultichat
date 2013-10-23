@@ -6,7 +6,7 @@ pyChatServ pre-alpha
 - [x] Send Msgs to all Users via "/send" command
 - [*] Login and nicknaming, including guests
 - [*] clean logout
-- [ ] multiple channels and database connection
+- [ ] multiple channels at the same time
 - [ ] privilege system (e.g. create channel, delete channel, kick/ban user)
 - [ ] temp channel
 - [ ] logging system
@@ -27,5 +27,7 @@ to be continued ...
 
 ***************************fixes and updates***************************
 
+- [2013-10-23] - basic logout for users
+- [2013-10-23] - basic login for registered users
 - [2013-10-23] - basic database structure for mysql
 - [2013-10-23] - clean logout on clientside connection "abort"

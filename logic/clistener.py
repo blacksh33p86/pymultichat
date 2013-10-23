@@ -3,41 +3,71 @@ Created on 21.10.2013
 
 @author: developer
 '''
-
+import hashlib
 import threading
 import Queue
+import select
+from logic.useritem import useritem
 
 
 class clistener(threading.Thread):
     
 
-    def __init__(self,chash, cmdQ,rQ,sock): 
+    def __init__(self,sSock,rQ,ul): 
         threading.Thread.__init__(self)
-        self.chash = chash 
-        self.cmdQ = cmdQ
+        
+        self.sSock = sSock
         self.rQ = rQ
-        self.sock = sock
+        self.userlist = ul
         self.alive = threading.Event()
         self.alive.set()
+        self.hasher = None
+        self.cSocks = []
+        
+           
         
     def stop(self):
-        self.rQ.put([self.chash,"!exited clientSockClose"])
-        self.sock.close()
+        #self.rQ.put([self.chash,"!exited clientSockClose"])
+        for s in self.socks:
+            s.close()
         self.alive.clear()
+        
  
     def run(self): 
-        self.sock.send("\nWelcome!\n")
+        
         while self.alive.isSet():
             try:
-                # Queue.get with timeout to allow checking self.alive
-                data = self.sock.recv(4096)
-                if not data:
-                    raise Exception("Connection to Client lost")
-                self.rQ.put([self.chash,data])
-                
-                
+                inputready,outputready,exceptready = select.select([self.sSock]+self.cSocks,[],[]) 
+                for sock in inputready:
+                    
+                    if sock == self.sSock:
+                        s, addr = sock.accept()
+                        
+                        p = useritem(s,addr,self.rQ)
+                        self.cSocks.append(s)
+                        self.userlist.append(p)
+                        s.send("\nWELCOME!\n")
+                        
+                    if sock in self.cSocks:  
+                        
+                        self.hasher = hashlib.md5()
+                        self.hasher.update(sock.getpeername()[0]+":"+str(sock.getpeername()[1]))
+                        chash = self.hasher.hexdigest()
+                        
+                        
+                        
+                        data = str(sock.recv(4096))
+                        
+                        if not data:
+                            raise Exception("Connection to Client lost")
+                        
+                        
+                        self.rQ.put([chash,data])
+                            
+                        
             except:
-                self.sock.close()
-                self.rQ.put([self.chash,"!exited clientSockClose"])
-                self.alive.clear()
-        
+                #if self.sock.isAlive():
+                sock.close()
+                self.rQ.put([chash,"!exited clientSockClose"])
+                        
+                

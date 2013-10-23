@@ -3,16 +3,19 @@ import threading
 import Queue
 from logic.useritem import useritem
 from logic.cmdHandler import cmdHandler
-
+from logic.clistener import clistener
 
 if __name__ == "__main__":
     
     userlist = []
+    cSocketlist = []
     rQueue = Queue.Queue()
     exitflag=True
     
     cmdH = cmdHandler(rQueue,userlist)
     cmdH.start()
+    
+    
     
     RECV_BUFFER = 4096 # Advisable to keep it as an exponent of 2
     PORT = 3232
@@ -23,13 +26,15 @@ if __name__ == "__main__":
     server_socket.bind(("0.0.0.0", PORT))
     server_socket.listen(10)
     
-    while exitflag:
+    cSockH = clistener(server_socket,rQueue,userlist)
+    cSockH.start()
+    
+    cmdH.join()
+    
+   
         
-        cSock, addr = server_socket.accept()
-        cSock.setblocking(1)
-        cSock.settimeout(1800)
-        p = useritem(cSock,addr,rQueue)
-        p.createListener()
-        userlist.append(p)
+        
+       
+        
         
         
