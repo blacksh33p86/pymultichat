@@ -23,8 +23,8 @@ pyChatServ pre-alpha
 - [ ] gaming channels (e.g. quiz)
 - [ ] webcam support for private chat
 
----to be continued---
+to be continued ...
 
 ***************************fixes and updates***************************
 
-- [2013-10-23] - clean logout on client connection shutdown
+- [2013-10-23] - clean logout on clientside connection "abort"
