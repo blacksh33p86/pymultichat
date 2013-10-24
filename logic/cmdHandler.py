@@ -68,6 +68,7 @@ class cmdHandler(threading.Thread):
                 
         remk.socket.close()            
         self.myDb.setOnline(remk.uid, 0)
+        self.myDb.addActivity("logout", remk.address, remk.uid, "Nickname: "+remk.nickname)
         # dblogout /chanlogout 
         if remk:
             self.ul.remove(remk)

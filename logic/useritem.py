@@ -22,13 +22,13 @@ class useritem(object):
         self.uid = None
         
         m = hashlib.md5()
-        m.update(address[0]+":"+str(address[1]))
+        m.update(self.address)
         
         self.chash = m.hexdigest()
         
         self.privilege = 0
         self.loggedin = False
-        self.th = ""
+       # self.th = ""
         
         
         

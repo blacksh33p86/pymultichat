@@ -12,9 +12,14 @@ class idb(object):
     connection = None
     cursor = None
     salt = None
+    
 
     def __init__(self):
-        self.connection = MySQLdb.connect("localhost","chatadmin", "test", "chatsrv")
+        self.dbhost = "localhost"
+        self.dbuser = "chatadmin"
+        self.dbpw = "test"
+        self.dbname = "chatsrv"
+        self.connection = MySQLdb.connect(self.dbhost,self.dbuser, self.dbpw, self.dbname)
         self.cursor = self.connection.cursor() 
         self.salt = "b70915cd1cae7d84b997d1248c857f0a"
         
@@ -35,16 +40,21 @@ class idb(object):
         
         for row in self.cursor:
             self.setOnline(row[0],1) # set online
- #           self.addActivity(self,"login", address, row[0], "Nickname: "+user)# set activity
+            self.addActivity("login", address, row[0], "Nickname: "+user)# set activity
             return row
                 
         return None
     
     def setOnline(self,uid,value):
-        
-        self.c.execute("UPDATE cs_users SET onlinestatus="+str(value)+" WHERE id="+str(uid))
-        
+        #conn = MySQLdb.connect(self.dbhost,self.dbuser, self.dbpw, self.dbname)
+        #cur = conn.cursor() 
+        self.cursor.execute("UPDATE cs_users SET onlinestatus="+str(value)+" WHERE id="+str(uid))
+        self.connection.commit()
+        #print("UPDATE cs_users SET onlinestatus="+str(value)+" WHERE id="+str(uid))
+        #conn.close()
     
     def addActivity(self,action, con, uid, val):
-        pass
+        query = "INSERT INTO cs_activities (action,connection,userid,value) VALUES ('%s','%s',%i,'%s')" % (action,con,uid,val)
+        self.cursor.execute(query)
+        self.connection.commit()
         

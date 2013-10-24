@@ -43,7 +43,7 @@ class clistener(threading.Thread):
                     if sock == self.sSock:
                         s, addr = sock.accept()
                         
-                        p = useritem(s,addr,self.rQ)
+                        p = useritem(s,addr[0]+":"+str(addr[1]),self.rQ)
                         self.cSocks.append(s)
                         self.userlist.append(p)
                         s.send("\nWELCOME!\n")
