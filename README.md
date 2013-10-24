@@ -5,7 +5,7 @@ pyChatServ pre-alpha
 - [x] connect from Client
 - [x] Send Msgs to all Users via "/send" command
 - [x] Login and nicknaming, including guests
-- [*] clean logout
+- [x] clean logout
 - [ ] multiple channels at the same time
 - [ ] privilege system (e.g. create channel, delete channel, kick/ban user)
 - [ ] temp channel
@@ -32,6 +32,7 @@ to be continued ...
 
 ***************************fixes and updates***************************
 
+- [2013-10-24] - preparations for multichanneling
 - [2013-10-24] - *fixed* logout issue
 - [2013-10-24] - basic login for guest users
 - [2013-10-24] - onlinestatus for registered users
