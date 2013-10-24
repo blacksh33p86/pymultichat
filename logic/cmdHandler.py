@@ -17,12 +17,14 @@ class cmdHandler(threading.Thread):
     '''
     myDb = None
 
-    def __init__(self,rQ, userlist, cSocks):
+    def __init__(self,rQ, userlist, cSocks, channels):
         threading.Thread.__init__(self)
         self.rQ = rQ
         self.ul= userlist
         self.myDb = idb()
         self.cSocks = cSocks
+        self.channels = channels
+        self.channels = self.channels + self.myDb.getChannels()
         
         self.alive = threading.Event()
         self.alive.set()
@@ -33,8 +35,13 @@ class cmdHandler(threading.Thread):
     def sendMsgToAll(self,u,cmd):
         
         for user in self.ul:
-            user.sendMessage(u+ ": "+" ".join(cmd))
-               
+            user.sendMessage(u+ ": "+" ".join(cmd[1:]))
+            
+    def sendMsgToAllinChannel(self, u, cmd):
+        for chan in self.channels:
+            if cmd[0] == chan[1]:
+                for user in chan[3]:
+                    user.sendMessage("["+cmd[0]+"]"+" "+u+": "+cmd[1])
     
     def isNicknameinBlacklist(self, nic):
         return self.myDb.isNicknameonBlacklist(nic)
@@ -52,6 +59,7 @@ class cmdHandler(threading.Thread):
                 u.uid = userdata[0]
                 u.privilege = int(userdata[1])
                 u.loggedin = True
+                self.channels[0][3].append(u)
                 return True
         elif len(cmd) == 1 and cmd[0].strip() == "guest":
             nick = self.myDb.loginGuest(u.address)
@@ -63,10 +71,21 @@ class cmdHandler(threading.Thread):
                 u.loggedin = True
                 self.myDb.addActivity("login", u.address, u.uid, "Nickname: "+u.nickname)
                 u.sendMessage("/nickname "+u.nickname)
+                self.channels[0][3].append(u)
                 return True
         u.sendMessage("/exit")
         return False
         # return true or false
+    def remUserFromChannel(self,u,c=None):
+        if not c:
+            for chan in self.channels:
+                if u in chan[3]:
+                    chan[3].remove(u)
+        else:
+            for chan in self.channels:
+                if c == chan[1]:
+                    if u in chan[3]:
+                        chan[3].remove(u)
         
     def remUser(self,chash,cmd):
         remk = None
@@ -84,7 +103,9 @@ class cmdHandler(threading.Thread):
             self.myDb.addActivity("logout", remk.address, -1, "Nickname: "+remk.nickname)
          
         if remk:
-            self.cSocks.remove(remk.socket)
+            if remk.socket in self.cSocks:
+                self.cSocks.remove(remk.socket)
+            self.remUserFromChannel(remk)
             self.ul.remove(remk)
             
         
@@ -107,6 +128,14 @@ class cmdHandler(threading.Thread):
                 return a
            
         return None
+    
+    def joinChannel(self,u,cmd):
+        for c in self.channels:
+            if c[1]==cmd[0]:
+                c[3].append(u)
+                
+    def leaveChannel(self,u,cmd):
+        self.remUserFromChannel(u,cmd[0])
         
     def run(self): 
         while self.alive.isSet():
@@ -123,9 +152,13 @@ class cmdHandler(threading.Thread):
                         if user.loggedin:
                             
                             if cmd[0]== "/send":
-                                self.sendMsgToAll(user.nickname, cmd[1:])
-                            
-                            
+                                self.sendMsgToAllinChannel(user.nickname, cmd[1:])
+                            if cmd[0] == "/join":
+                                if len(cmd)==2:
+                                    self.joinChannel(user, cmd[1:])
+                            if cmd[0] == "/leave":
+                                if len(cmd)==2:
+                                    self.leaveChannel(user, cmd[1:])
                                 
                             if user.privilege >=1: # registered
                                 pass
@@ -142,7 +175,7 @@ class cmdHandler(threading.Thread):
                                     self.remUser(chash, cmd)
                                 else:
                                     print(user.nickname+" just successfully logged in")
-                            
+                                    #self.getUserBycHash(chash).sendMessage("/sendchannellist "+str(self.channels))
                                 
                         if cmd[0]== "/logout":
                                 self.logout(chash, cmd[1:])

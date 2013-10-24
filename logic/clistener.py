@@ -47,6 +47,8 @@ class clistener(threading.Thread):
                         self.cSocks.append(s)
                         self.userlist.append(p)
                         s.send("\nWELCOME!\n")
+                                           
+                        
                         
                     if sock in self.cSocks:  
                         
@@ -71,6 +73,7 @@ class clistener(threading.Thread):
                     print(ex.args)
                 if sock in self.cSocks:
                     sock.close()
-                    self.rQ.put([chash,"!exited clientSockClose"])
+                    self.cSocks.remove(sock)
+                    self.rQ.put([chash,"['!exited', 'clientSockClose']"])
                         
                 

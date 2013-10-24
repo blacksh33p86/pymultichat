@@ -85,4 +85,12 @@ class idb(object):
             self.connection.commit()
         except:
             self.connection.rollback()
+            
+    def getChannels(self): # only fetches fixed channels
+        query = "SELECT * FROM cs_fixedchannels"
+        c = []
+        self.cursor.execute(query)
+        for row in self.cursor:
+            c.append([row[0],row[1],row[2],[]])
+        return c
         

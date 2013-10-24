@@ -9,10 +9,12 @@ if __name__ == "__main__":
     
     userlist = []
     cSocketlist = []
+    channellist = []
+    
     rQueue = Queue.Queue()
     exitflag=True
     
-    cmdH = cmdHandler(rQueue,userlist,cSocketlist)
+    cmdH = cmdHandler(rQueue,userlist,cSocketlist,channellist)
     cmdH.start()
     
     

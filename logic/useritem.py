@@ -28,7 +28,7 @@ class useritem(object):
         
         self.privilege = 0
         self.loggedin = False
-       # self.th = ""
+       
         
         
         
