@@ -17,12 +17,12 @@ class cmdHandler(threading.Thread):
     '''
     myDb = None
 
-    def __init__(self,rQ, userlist):
+    def __init__(self,rQ, userlist, cSocks):
         threading.Thread.__init__(self)
         self.rQ = rQ
         self.ul= userlist
         self.myDb = idb()
-        
+        self.cSocks = cSocks
         
         self.alive = threading.Event()
         self.alive.set()
@@ -76,13 +76,17 @@ class cmdHandler(threading.Thread):
             
                 
         remk.socket.close()       
-             
-        self.myDb.setOnline(remk.uid, 0, remk.nickname)
-        self.myDb.addActivity("logout", remk.address, remk.uid, "Nickname: "+remk.nickname)
-        # dblogout /chanlogout 
+        if remk.uid != None:
+            self.myDb.setOnline(remk.uid, 0, remk.nickname)
+        if remk.uid != None:
+            self.myDb.addActivity("logout", remk.address, remk.uid, "Nickname: "+remk.nickname)
+        else:
+            self.myDb.addActivity("logout", remk.address, -1, "Nickname: "+remk.nickname)
+         
         if remk:
+            self.cSocks.remove(remk.socket)
             self.ul.remove(remk)
-        
+            
         
     def logout(self,chash,cmd):
         self.remUser(chash, cmd)
@@ -111,9 +115,9 @@ class cmdHandler(threading.Thread):
                 print(cmd)
                 if len(cmd)>=2:
                     chash = cmd[0]
-                    cmd = cmd[1]
-                    cmd = cmd.split(" ")
-                    cmd[0]=cmd[0].strip()
+                    cmd = eval(cmd[1].strip())
+                    #cmd = cmd.split(" ")
+                    #cmd[0]=cmd[0].strip()
                     user = self.getUserBycHash(chash)
                     if user:
                         if user.loggedin:
@@ -149,4 +153,5 @@ class cmdHandler(threading.Thread):
             except Exception as ex:
                 if len(ex.args)>0:
                     print(ex.args)
+                    self.rQ.task_done()
                 continue

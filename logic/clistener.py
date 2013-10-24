@@ -13,7 +13,7 @@ from logic.useritem import useritem
 class clistener(threading.Thread):
     
 
-    def __init__(self,sSock,rQ,ul): 
+    def __init__(self,sSock,rQ,ul,cSocks): 
         threading.Thread.__init__(self)
         
         self.sSock = sSock
@@ -22,7 +22,7 @@ class clistener(threading.Thread):
         self.alive = threading.Event()
         self.alive.set()
         self.hasher = None
-        self.cSocks = []
+        self.cSocks = cSocks
         
            
         
@@ -65,9 +65,12 @@ class clistener(threading.Thread):
                         self.rQ.put([chash,data])
                             
                         
-            except:
+            except Exception as ex:
                 #if self.sock.isAlive():
-                sock.close()
-                self.rQ.put([chash,"!exited clientSockClose"])
+                if len(ex.args)>0:
+                    print(ex.args)
+                if sock in self.cSocks:
+                    sock.close()
+                    self.rQ.put([chash,"!exited clientSockClose"])
                         
                 

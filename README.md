@@ -15,7 +15,7 @@ pyChatServ pre-alpha
 
 ***************************issues to be solved*************************
 
-- [ ] infinite loop on some ways of clientside connection shutdown
+- [x] infinite loop on some ways of clientside connection shutdown
       comment: "'!exited clientSockClose'" queued multiple times
 
 ***************************future ideas********************************
@@ -32,6 +32,7 @@ to be continued ...
 
 ***************************fixes and updates***************************
 
+- [2013-10-24] - *fixed* logout issue
 - [2013-10-24] - basic login for guest users
 - [2013-10-24] - onlinestatus for registered users
 - [2013-10-24] - basic activity logging in database

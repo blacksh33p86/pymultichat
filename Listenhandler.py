@@ -12,7 +12,7 @@ if __name__ == "__main__":
     rQueue = Queue.Queue()
     exitflag=True
     
-    cmdH = cmdHandler(rQueue,userlist)
+    cmdH = cmdHandler(rQueue,userlist,cSocketlist)
     cmdH.start()
     
     
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     server_socket.bind(("0.0.0.0", PORT))
     server_socket.listen(10)
     
-    cSockH = clistener(server_socket,rQueue,userlist)
+    cSockH = clistener(server_socket,rQueue,userlist,cSocketlist)
     cSockH.start()
     
     cmdH.join()

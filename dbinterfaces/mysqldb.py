@@ -40,7 +40,7 @@ class idb(object):
         self.cursor.execute("SELECT id,privilege FROM cs_users WHERE nickname='"+user+"' AND password='"+saltedpw+"'")
         
         for row in self.cursor:
-            self.setOnline(row[0],1) # set online
+            self.setOnline(row[0],1, user) # set online
             self.addActivity("login", address, row[0], "Nickname: "+user)# set activity
             return row
                 
