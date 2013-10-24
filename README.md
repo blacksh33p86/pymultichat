@@ -15,7 +15,7 @@ pyChatServ pre-alpha
 
 ***************************issues to be solved*************************
 
-- [X] infinite loop on some ways of clientside connection shutdown
+- [x] infinite loop on some ways of clientside connection shutdown
       comment: "'!exited clientSockClose'" queued multiple times
 
 ***************************future ideas********************************

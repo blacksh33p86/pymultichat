@@ -59,7 +59,7 @@ class clistener(threading.Thread):
                         
                         
                         data = str(sock.recv(4096))
-                        
+                        print (data)
                         if not data:
                             raise Exception("Connection to Client lost")
                         
