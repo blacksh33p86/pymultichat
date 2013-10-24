@@ -53,9 +53,18 @@ class cmdHandler(threading.Thread):
                 u.privilege = int(userdata[1])
                 u.loggedin = True
                 return True
-        elif len(cmd) == 1:
-            pass
-        
+        elif len(cmd) == 1 and cmd[0].strip() == "guest":
+            nick = self.myDb.loginGuest(u.address)
+            cmd[0] = cmd[0].strip()
+            if len(nick) == 2:
+                u.nickname = nick[0]
+                u.uid = int(nick[1])
+                u.privilege = 0
+                u.loggedin = True
+                self.myDb.addActivity("login", u.address, u.uid, "Nickname: "+u.nickname)
+                u.sendMessage("/nickname "+u.nickname)
+                return True
+        u.sendMessage("/exit")
         return False
         # return true or false
         
@@ -66,8 +75,9 @@ class cmdHandler(threading.Thread):
                 remk = k
             
                 
-        remk.socket.close()            
-        self.myDb.setOnline(remk.uid, 0)
+        remk.socket.close()       
+             
+        self.myDb.setOnline(remk.uid, 0, remk.nickname)
         self.myDb.addActivity("logout", remk.address, remk.uid, "Nickname: "+remk.nickname)
         # dblogout /chanlogout 
         if remk:
@@ -123,11 +133,11 @@ class cmdHandler(threading.Thread):
                                 pass
                                 
                         else:
-                            if cmd[0]== "/login" and ((len(cmd) == 2 and cmd[1]=="guest" ) or len(cmd) == 3 ):
+                            if cmd[0]== "/login" and ((len(cmd) == 2 and cmd[1].strip()=="guest" ) or len(cmd) == 3 ):
                                 if not self.login(user, cmd[1:]):
                                     self.remUser(chash, cmd)
                                 else:
-                                    print(cmd[1]+" just successfully logged in")
+                                    print(user.nickname+" just successfully logged in")
                             
                                 
                         if cmd[0]== "/logout":

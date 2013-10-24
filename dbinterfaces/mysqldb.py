@@ -6,6 +6,7 @@ Created on 23.10.2013
 
 import MySQLdb
 import hashlib
+import random
 
 class idb(object):
    
@@ -45,16 +46,43 @@ class idb(object):
                 
         return None
     
-    def setOnline(self,uid,value):
-        #conn = MySQLdb.connect(self.dbhost,self.dbuser, self.dbpw, self.dbname)
-        #cur = conn.cursor() 
-        self.cursor.execute("UPDATE cs_users SET onlinestatus="+str(value)+" WHERE id="+str(uid))
-        self.connection.commit()
-        #print("UPDATE cs_users SET onlinestatus="+str(value)+" WHERE id="+str(uid))
-        #conn.close()
+    def loginGuest(self,address):
+        guestname = ""
+        
+        nunique = True
+        while nunique:
+            guestname = "Guest"+str(random.randint(100,999999))
+            query = "SELECT id FROM cs_guests WHERE nickname='%s' or connection='%s'" % (guestname,address)
+            self.cursor.execute(query)
+            for row in self.cursor:
+                continue
+            try:
+                self.cursor.execute("INSERT INTO cs_guests (nickname,connection) VALUES ('%s','%s')" % (guestname,address))
+                self.connection.commit()
+            except:
+                self.connection.rollback()
+            return [guestname,self.cursor.lastrowid]
+        
+        return None
+    
+    
+    def setOnline(self,uid,value,nick):
+        try:
+            if not "Guest" in nick:
+                self.cursor.execute("UPDATE cs_users SET onlinestatus="+str(value)+" WHERE id="+str(uid))
+                self.connection.commit()
+            else:
+                self.cursor.execute("DELETE FROM cs_guests WHERE nickname='%s'" % nick)
+                self.connection.commit()
+        except:
+            self.connection.rollback()
+        
     
     def addActivity(self,action, con, uid, val):
         query = "INSERT INTO cs_activities (action,connection,userid,value) VALUES ('%s','%s',%i,'%s')" % (action,con,uid,val)
-        self.cursor.execute(query)
-        self.connection.commit()
+        try:
+            self.cursor.execute(query)
+            self.connection.commit()
+        except:
+            self.connection.rollback()
         
