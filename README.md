@@ -33,8 +33,8 @@ to be continued ...
 ***************************fixes and updates***************************
 
 - [2013-10-25] - basic HTML5 client based on Websockets !!! websockify needed as proxy !!!
-			\nLogin as guest, Logout works
-			\nsending messages works (still in one fixed channel)
+		 Login as guest, Logout works
+		 sending messages works (still in one fixed channel)
 - [2013-10-24] - *fixed* lgout issue when clientconnection suddenly shuts down
 - [2013-10-24] - preparations for multichanneling
 - [2013-10-24] - *fixed* some logout issues
