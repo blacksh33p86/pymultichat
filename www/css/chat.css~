@@ -1,0 +1,17 @@
+
+#chat{
+max-height:250px;
+min-height:250px;
+max-width:515px;
+min-width:515px;
+border-radius: 6px;
+border:1px solid #ccc;
+overflow:auto;
+background-color:white;
+padding:5px;
+margin-bottom:10px;
+
+font-size: 12px;
+font-family: verdana,arial;
+line-height: 20px;
+}
