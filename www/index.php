@@ -82,7 +82,7 @@
       <hr>
 
       <footer>
-        <p>&copy; script-base[.]com 2013</p>
+        <p>&copy; blacksh33p 2013</p>
       </footer>
 
     </div> <!-- /container -->
