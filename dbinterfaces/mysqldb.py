@@ -33,9 +33,8 @@ class idb(object):
             return False
         
     def login(self,user,pw, address):
-        m = hashlib.md5()
-        m.update(pw+self.salt)
-        saltedpw = m.hexdigest()
+        
+        saltedpw = pw
         
         self.cursor.execute("SELECT id,privilege FROM cs_users WHERE nickname='"+user+"' AND password='"+saltedpw+"'")
         

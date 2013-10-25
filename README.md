@@ -20,7 +20,6 @@ pyChatServ pre-alpha
 
 ***************************future ideas********************************
 
-- [ ] multiple channels for clients
 - [ ] private chat system
 - [ ] colors and emoticons
 - [ ] avatars for registered users

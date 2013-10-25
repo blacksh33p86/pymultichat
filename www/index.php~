@@ -1,3 +1,15 @@
+<?php 
+if($_GET['url']=="logout")
+ { 
+ if ( isset( $_COOKIE[session_name()] ) )
+	setcookie( session_name(), “”, time()-3600, “/” );
+$_SESSION = array();
+session_destroy();
+header("Location: ".$_SERVER['PHP_SELF']);
+    	exit;
+
+ }
+session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -51,13 +63,17 @@
               <li><a href="index.php?url=about">About</a></li>
               
             </ul>
+            <?php if(!isset($_SESSION['loggedin']) && !$_SESSION['loggedin'] ) { ?>
 				 <form class="navbar-form pull-right">
               <input class="span2" type="text" placeholder="Email">
              
-              <input class="span2" type="password" placeholder="Password">
+              <input class="span2" type="password" placeholder="Password"> 
+          
               <button type="submit" class="btn">Sign in</button>  <button type="submit" class="btn">Register</button>
-            </form>          
-            </form>
+                    
+            </form><?php } else {?>
+            <a href="index.php?url=logout" class="btn btn-primary ">logout</a>
+            <?php } ?>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -71,7 +87,8 @@
       
       <?php
 				  switch($_GET['url']) {      
-				    case ("chat"): include("content/chat.php"); break;
+				    case ("chat"): if($_SESSION['loggedin']) include("content/login.php"); else include("content/chat.php"); break;
+				    case ("login"): include("content/login.php"); break;
 				    default: include("content/home.php"); 
 					};           
 				?>
@@ -82,7 +99,7 @@
       <hr>
 
       <footer>
-        <p>&copy; script-base[.]com 2013</p>
+        <p>&copy; blacksh33p 2013</p>
       </footer>
 
     </div> <!-- /container -->

@@ -46,7 +46,7 @@ class clistener(threading.Thread):
                         p = useritem(s,addr[0]+":"+str(addr[1]),self.rQ)
                         self.cSocks.append(s)
                         self.userlist.append(p)
-                        s.send("Welcome!") 
+                        #s.send("Welcome!") 
                         # aendern                
                         
                         

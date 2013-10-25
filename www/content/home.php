@@ -1,1 +1,3 @@
-<h1>News</h1>
+<h3>News</h3>
+
+<p>*** we're still in pre-alpha ***</p>

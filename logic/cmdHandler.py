@@ -70,7 +70,7 @@ class cmdHandler(threading.Thread):
                 u.privilege = 0
                 u.loggedin = True
                 self.myDb.addActivity("login", u.address, u.uid, "Nickname: "+u.nickname)
-                u.sendMessage("/nickname "+u.nickname)
+                #u.sendMessage("/nickname "+u.nickname)
                 self.channels[0][3].append(u)
                 return True
         u.sendMessage("/exit")

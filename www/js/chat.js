@@ -20,7 +20,9 @@ function chat(inp,out)
 	       input = document.getElementById(input);
 	       output = document.getElementById(output);
 	       
-	       
+	       if (loggintype=="guest") {
+	       	c.loginGuest();
+	       }
 	     };
 	     ws.onmessage = function (evt) 
 	     { 
@@ -34,7 +36,8 @@ function chat(inp,out)
 	     ws.onclose = function()
 	     { 
 	        // websocket is closed.
-	        alert("Connection is closed..."); 
+	        //alert("Connection is closed..."); 
+	        
 	     };
 	     
 	  }
@@ -45,11 +48,21 @@ function chat(inp,out)
 	  }
 	 };
 	 
+	 this.writeToChat = function(msg){
+	 	output.innerHTML  +=msg+'<br>';	 
+	 }
+	 
+	
+	 
 	 this.loginGuest = function () {
-	 	this.sendDirectly("['/login','guest']");
+	 	
+	 	
+	 	
+	 	this.sendDirectly("['/login','guest']") ;
 	 };
 	 
 	 this.sendDirectly = function (msg) {
+	 	
 	 	 ws.send(window.btoa(unescape(encodeURIComponent( msg ))));
 	 	};
 	 
@@ -65,7 +78,8 @@ function chat(inp,out)
 		
 	this.disconnect = function () {
 	  	
-			ws.send("['/logout','me']");
+			this.sendDirectly("['/logout','me']");
+			window.location.href = "index.php";
 		};
 
 }

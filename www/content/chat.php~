@@ -1,10 +1,10 @@
 
 
 <div  style="width: 600px; margin:0 auto">
- <p><a href="#" onclick="c.connect();" class="btn btn-primary btn-small">Connect</a> <a href="#" onclick="javscript:c.disconnect();" class="btn btn-primary btn-small">Disconnect</a> <a href="#" onclick="javscript:c.loginGuest();" class="btn btn-primary btn-small">Login as guest</a></p>
-      <!--  <textarea style="width:600px" rows="10" id="chat"></textarea><br />!-->
+ <p style="width:525px; text-align:center"> <a href="#" onclick="c.disconnect();" class="btn btn-primary btn-small">Disconnect</a> </p>
+     <!-- <a href="#" onclick="c.connect();" class="btn btn-primary btn-small">Connect</a><a href="#" onclick="c.loginGuest();" class="btn btn-primary btn-small">Login as guest</a> --!>
       <div id="chat"></div>
-   <div  class="input-append"><input type="text" id="inp" style="width:445px" /> <a href="#" onclick="javascript:c.sendmsg();"  class="btn btn-primary ">Senden</a></div>
+   <div  class="input-append"><input type="text" id="inp" style="width:450px" /> <a href="#" onclick="javascript:c.sendmsg();"  class="btn btn-primary ">Senden</a></div>
 </div>
 
 <script>
@@ -13,5 +13,14 @@ function keyinmsg(ev) {
 	if (ev.keyCode == 13)
 		c.sendmsg(document.getElementById('inp').value);
 };
+
+
+<?php 
+if ($_SESSION['loggedin'] && $_GET['action']=="guest" || $_SESSION['username']=="")
+{
+	print "var loggintype='guest';\n";
+	print "c.connect();\n";
+	
+} ?>
 
 </script>
